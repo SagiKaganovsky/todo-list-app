@@ -2,21 +2,20 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { TextField, IconButton } from "@material-ui/core";
 import { AddCircle } from "@material-ui/icons";
-import { addTodo, fetchAddToDo } from "./todosSlice";
+import { addNewToDo } from "./todosSlice";
 
 const ToDo = () => {
-  const [todoState, setTodoState] = useState("");
+  const [title, setTitle] = useState("");
   const [error, setError] = useState();
   const dispatch = useDispatch();
+
   const handleClick = (e) => {
-    if (!todoState.trim()) {
+    if (!title.trim()) {
       return;
     }
 
-    dispatch(addTodo(todoState));
-
-    dispatch(fetchAddToDo(todoState))
-    setTodoState("");
+    dispatch(addNewToDo(title));
+    setTitle("");
   };
 
   return (
@@ -26,9 +25,9 @@ const ToDo = () => {
         label="todo"
         variant="outlined"
         type="text"
-        value={todoState}
+        value={title}
         color="secondary"
-        onChange={(e) => setTodoState(e.target.value)}
+        onChange={(e) => setTitle(e.target.value)}
       />
       <IconButton aria-label="add todo" onClick={handleClick}>
         <AddCircle fontSize="large" />

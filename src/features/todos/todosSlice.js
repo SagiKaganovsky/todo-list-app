@@ -18,14 +18,14 @@ export const fetchAllTodos = createAsyncThunk(
     return response.data;
   });
 
-export const fetchAddToDo = createAsyncThunk("todos/addToDo",
-  async ({ id, title, done }, { signal }) => {
+export const addNewToDo = createAsyncThunk("todos/addNewToDo",
+  async (title, { signal }) => {
     const source = axios.CancelToken.source();
     signal.addEventListener("abort", () => {
       source.cancel();
     });
 
-    const response = await todosAPI.post('todos', { id, title, done }, {
+    const response = await todosAPI.post('todos', { title: title, id: uuidv4(), done: false }, {
       cancelToken: source.token
     });
 
@@ -41,7 +41,7 @@ const todosSlice = createSlice({
     error: null
   },
   reducers: {
-    addTodo: {
+    addNewTodo: {
       reducer: (state, action) => {
         const { id, title, done } = action.payload;
         state.todos.unshift({ id, title, done });
@@ -75,11 +75,12 @@ const todosSlice = createSlice({
     [fetchAllTodos.rejected]: (state, action) => {
       state.error = action.payload;
     },
-    [fetchAddToDo.fulfilled]: (state, action) => {
-      state.entities.push(action.payload)
+    [addNewToDo.fulfilled]: (state, { payload }) => {
+      state.todos.push(payload)
     }
   }
 });
+
 export const selectAllTodos = (state) => state.todos.todos;
 export const selectLoading = (state) => state.todos.loading;
 export const selectError = (state) => state.todos.error;
