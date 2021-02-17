@@ -39,9 +39,6 @@ const App = () => {
                     </>
                   )}
                 />
-                {/* <Route exact path="/todos/:id" component={SinglePostPage} />
-                <Route exact path="/editToDo/:id" component={EditPostForm} />
-                <Redirect to="/" /> */}
               </Switch>
             </div>
             </Router>
