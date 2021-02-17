@@ -1,13 +1,7 @@
 import React, { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectAllTodos,
-  selectLoading,
-  deleteTodo,
-  toggleTodo
-} from "./todosSlice";
-
+import { selectAllTodos, deleteToDo, toggleTodo, fetchAllTodos } from "./todosSlice";
 import DeleteIcon from "@material-ui/icons/Delete";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -20,6 +14,13 @@ import IconButton from "@material-ui/core/IconButton";
 const ToDoList = () => {
   const todos = useSelector(selectAllTodos);
   const dispatch = useDispatch();
+
+  const todosStatus = useSelector((state) => state.todos.status);
+  const error = useSelector((state) => state.todos.error);
+
+  useEffect(() => {
+      dispatch(fetchAllTodos());
+  }, [todosStatus, dispatch]);
 
   return (
     <List>
@@ -49,7 +50,7 @@ const ToDoList = () => {
                 <IconButton
                   edge="end"
                   aria-label="todo"
-                  onClick={() => dispatch(deleteTodo(todo.id))}
+                  onClick={() => dispatch(deleteToDo(todo.id))}
                 >
                   <DeleteIcon />
                 </IconButton>

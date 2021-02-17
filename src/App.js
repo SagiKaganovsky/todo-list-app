@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { Provider } from "react-redux";
 import Todo from "./features/todos/Todo";
 import ToDoList from "./features/todos/TodoList";
@@ -27,12 +28,23 @@ const App = () => {
           <CssBaseline />
 
           <Provider store={store}>
+          <Router>
             <div className="App">
-              <>
-                <Todo />
-                <ToDoList />
-              </>
+              <Switch>
+                <Route exact path="/"
+                  render={() => (
+                    <>
+                      <Todo />
+                      <ToDoList />
+                    </>
+                  )}
+                />
+                {/* <Route exact path="/todos/:id" component={SinglePostPage} />
+                <Route exact path="/editToDo/:id" component={EditPostForm} />
+                <Redirect to="/" /> */}
+              </Switch>
             </div>
+            </Router>
           </Provider>
         </ThemeProvider>
       </MuiThemeProvider>

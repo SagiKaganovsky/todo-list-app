@@ -11,12 +11,13 @@ export const fetchAllTodos = createAsyncThunk(
       source.cancel();
     });
 
-    const response = await todosAPI.get(`/${endPoint}`, {
+    const response = await todosAPI.get("todos", {
       cancelToken: source.token
     });
 
     return response.data;
-  });
+  }
+);
 
 export const addNewToDo = createAsyncThunk("todos/addNewToDo",
   async (title, { signal }) => {
@@ -30,7 +31,22 @@ export const addNewToDo = createAsyncThunk("todos/addNewToDo",
     });
 
     return response.data;
-  },
+  }
+);
+
+export const deleteToDo = createAsyncThunk("todos/deleteToDo",
+  async (id, { signal }) => {
+    const source = axios.CancelToken.source();
+    signal.addEventListener("abort", () => {
+      source.cancel();
+    });
+
+    const response = await todosAPI.post('todos/delete', { id: id }, {
+      cancelToken: source.token
+    });
+
+    return response.data;
+  }
 );
 
 const todosSlice = createSlice({
@@ -51,9 +67,6 @@ const todosSlice = createSlice({
           payload: { title: title, id: uuidv4(), done: false }
         };
       }
-    },
-    deleteTodo: (state, action) => {
-      state.todos = state.todos.filter((todo) => todo.id !== action.payload);
     },
     toggleTodo(state, action) {
       const todo = state.todos.find((todo) => todo.id === action.payload);
@@ -77,13 +90,20 @@ const todosSlice = createSlice({
     },
     [addNewToDo.fulfilled]: (state, { payload }) => {
       state.todos.push(payload)
-    }
+    },
+    [addNewToDo.rejected]: (state, action) => {
+      state.error = action.payload;
+    },
+    [deleteToDo.fulfilled]: (state, { payload }) => {
+      console.log(payload);
+      state.todos = state.todos.filter((todo) => todo.id !== payload);
+    },
   }
 });
 
 export const selectAllTodos = (state) => state.todos.todos;
 export const selectLoading = (state) => state.todos.loading;
 export const selectError = (state) => state.todos.error;
-export const { addTodo, deleteTodo, toggleTodo } = todosSlice.actions;
+export const { addTodo, toggleTodo } = todosSlice.actions;
 
 export default todosSlice.reducer;
