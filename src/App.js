@@ -25,7 +25,7 @@ const App = () => {
     <StylesProvider injectFirst>
       <MuiThemeProvider theme={theme}>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
+          <CssBaseline />yar
           <Container fixed>
             <Provider store={store}>
               <Router>
