@@ -10,7 +10,7 @@ import {
   StylesProvider,
   createMuiTheme
 } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import { CssBaseline, Container } from "@material-ui/core";
 import "./styles.css";
 
 const theme = createMuiTheme({
@@ -26,23 +26,24 @@ const App = () => {
       <MuiThemeProvider theme={theme}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-
-          <Provider store={store}>
-          <Router>
-            <div className="App">
-              <Switch>
-                <Route exact path="/"
-                  render={() => (
-                    <>
-                      <Todo />
-                      <ToDoList />
-                    </>
-                  )}
-                />
-              </Switch>
-            </div>
-            </Router>
-          </Provider>
+          <Container fixed>
+            <Provider store={store}>
+              <Router>
+                <div className="App">
+                  <Switch>
+                    <Route exact path="/"
+                      render={() => (
+                        <>
+                          <Todo />
+                          <ToDoList />
+                        </>
+                      )}
+                    />
+                  </Switch>
+                </div>
+              </Router>
+            </Provider>
+          </Container>
         </ThemeProvider>
       </MuiThemeProvider>
     </StylesProvider>
