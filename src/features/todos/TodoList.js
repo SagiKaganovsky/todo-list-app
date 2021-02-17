@@ -17,7 +17,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 
-export default (props) => {
+const ToDoList = () => {
   const todos = useSelector(selectAllTodos);
   const dispatch = useDispatch();
 
@@ -33,13 +33,13 @@ export default (props) => {
               key={todo.id}
               onClick={() => dispatch(toggleTodo(todo.id))}
               style={{
-                textDecoration: todo.completed ? "line-through" : "none"
+                textDecoration: todo.done ? "line-through" : "none"
               }}
             >
               <ListItemIcon>
                 <Checkbox
                   edge="start"
-                  checked={todo.completed}
+                  checked={todo.done}
                   tabIndex={-1}
                   disableRipple
                 />
@@ -60,3 +60,5 @@ export default (props) => {
     </List>
   );
 };
+
+export default ToDoList;

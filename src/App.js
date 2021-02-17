@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Provider } from "react-redux";
 import Todo from "./features/todos/Todo";
-import TodoList from "./features/todos/TodoList";
+import ToDoList from "./features/todos/TodoList";
 import store from "./store";
 import { ThemeProvider } from "styled-components";
 import {
@@ -30,7 +30,7 @@ const App = () => {
             <div className="App">
               <>
                 <Todo />
-                <TodoList />
+                <ToDoList />
               </>
             </div>
           </Provider>

@@ -1,22 +1,36 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import jsonAPI from "../../api/jsonAPI";
+import todosAPI from "../../api/todosAPI";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
 export const fetchAllTodos = createAsyncThunk(
-  "todos/fetchAllTodos",
+  "todos/getAllTodos",
   async (endPoint, { signal }) => {
     const source = axios.CancelToken.source();
     signal.addEventListener("abort", () => {
       source.cancel();
     });
 
-    const response = await jsonAPI.get(`/${endPoint}`, {
+    const response = await todosAPI.get(`/${endPoint}`, {
       cancelToken: source.token
     });
 
     return response.data;
-  }
+  });
+
+export const fetchAddToDo = createAsyncThunk("todos/addToDo",
+  async ({ id, title, done }, { signal }) => {
+    const source = axios.CancelToken.source();
+    signal.addEventListener("abort", () => {
+      source.cancel();
+    });
+
+    const response = await todosAPI.post('todos', { id, title, done }, {
+      cancelToken: source.token
+    });
+
+    return response.data;
+  },
 );
 
 const todosSlice = createSlice({
@@ -29,12 +43,12 @@ const todosSlice = createSlice({
   reducers: {
     addTodo: {
       reducer: (state, action) => {
-        const { id, title, completed } = action.payload;
-        state.todos.unshift({ id, title, completed });
+        const { id, title, done } = action.payload;
+        state.todos.unshift({ id, title, done });
       },
       prepare: (title) => {
         return {
-          payload: { title: title, id: uuidv4(), completed: false }
+          payload: { title: title, id: uuidv4(), done: false }
         };
       }
     },
@@ -44,7 +58,7 @@ const todosSlice = createSlice({
     toggleTodo(state, action) {
       const todo = state.todos.find((todo) => todo.id === action.payload);
       if (todo) {
-        todo.completed = !todo.completed;
+        todo.done = !todo.done;
       }
     }
   },
@@ -60,6 +74,9 @@ const todosSlice = createSlice({
     },
     [fetchAllTodos.rejected]: (state, action) => {
       state.error = action.payload;
+    },
+    [fetchAddToDo.fulfilled]: (state, action) => {
+      state.entities.push(action.payload)
     }
   }
 });

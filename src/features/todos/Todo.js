@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { TextField, IconButton } from "@material-ui/core";
 import { AddCircle } from "@material-ui/icons";
-import { addTodo } from "./todosSlice";
-export default (props) => {
+import { addTodo, fetchAddToDo } from "./todosSlice";
+
+const ToDo = () => {
   const [todoState, setTodoState] = useState("");
   const [error, setError] = useState();
   const dispatch = useDispatch();
@@ -13,6 +14,8 @@ export default (props) => {
     }
 
     dispatch(addTodo(todoState));
+
+    dispatch(fetchAddToDo(todoState))
     setTodoState("");
   };
 
@@ -28,9 +31,10 @@ export default (props) => {
         onChange={(e) => setTodoState(e.target.value)}
       />
       <IconButton aria-label="add todo" onClick={handleClick}>
-        <AddCircle  fontSize="large"/>
+        <AddCircle fontSize="large" />
       </IconButton>
       <div>{error}</div>
     </>
   );
 };
+export default ToDo;
