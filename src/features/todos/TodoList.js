@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectAllTodos, deleteToDo, toggleTodo, fetchAllTodos } from "./todosSlice";
+import { selectAllTodos, deleteToDo, toggleToDo, fetchAllTodos } from "./todosSlice";
 import DeleteIcon from "@material-ui/icons/Delete";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -19,7 +19,7 @@ const ToDoList = () => {
   const error = useSelector((state) => state.todos.error);
 
   useEffect(() => {
-      dispatch(fetchAllTodos());
+    dispatch(fetchAllTodos());
   }, [todosStatus, dispatch]);
 
   return (
@@ -32,7 +32,7 @@ const ToDoList = () => {
               dense
               button
               key={todo.id}
-              onClick={() => dispatch(toggleTodo(todo.id))}
+              onClick={() => dispatch(toggleToDo({ id: todo.id, done: !todo.done }))}
               style={{
                 textDecoration: todo.done ? "line-through" : "none"
               }}

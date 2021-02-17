@@ -48,7 +48,20 @@ export const deleteToDo = createAsyncThunk("todos/deleteToDo",
     return response.data;
   }
 );
+export const toggleToDo = createAsyncThunk("todos/toggleToDo",
+  async ({ id, done }, { signal }) => {
+    const source = axios.CancelToken.source();
+    signal.addEventListener("abort", () => {
+      source.cancel();
+    });
 
+    const response = await todosAPI.post('todos/toggleDone', { id: id, done: done }, {
+      cancelToken: source.token
+    });
+
+    return response.data;
+  }
+);
 const todosSlice = createSlice({
   name: "todos",
   initialState: {
@@ -57,23 +70,6 @@ const todosSlice = createSlice({
     error: null
   },
   reducers: {
-    addNewTodo: {
-      reducer: (state, action) => {
-        const { id, title, done } = action.payload;
-        state.todos.unshift({ id, title, done });
-      },
-      prepare: (title) => {
-        return {
-          payload: { title: title, id: uuidv4(), done: false }
-        };
-      }
-    },
-    toggleTodo(state, action) {
-      const todo = state.todos.find((todo) => todo.id === action.payload);
-      if (todo) {
-        todo.done = !todo.done;
-      }
-    }
   },
   extraReducers: {
     [fetchAllTodos.fulfilled]: (state, { payload }) => {
@@ -95,8 +91,13 @@ const todosSlice = createSlice({
       state.error = action.payload;
     },
     [deleteToDo.fulfilled]: (state, { payload }) => {
-      console.log(payload);
       state.todos = state.todos.filter((todo) => todo.id !== payload);
+    },
+    [toggleToDo.fulfilled]: (state, { payload }) => {
+      const todo = state.todos.find((todo) => todo.id === payload);
+      if (todo) {
+        todo.done = !todo.done;
+      }
     },
   }
 });
